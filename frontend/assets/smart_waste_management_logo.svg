@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" role="img" aria-label="Smart Waste Management System">
+  <g transform="translate(-2 3) scale(1.5)">
+    <rect x="8" y="8" width="124" height="124" rx="32" fill="#28724f"/>
+    <path d="M35 47h42l-3 38H38l-3-38Zm-4-8h50m-34 0 3-8h14l3 8m-17 17v14m12-14v14" fill="none" stroke="#f4faf5" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M59 44c2-10 10-16 22-16-1 12-7 18-17 19" fill="none" stroke="#b7e1c5" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m60 46 13-13" fill="none" stroke="#b7e1c5" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="230" y="103" fill="#f4faf5" font-family="Segoe UI, Arial, sans-serif" font-size="49" font-weight="750" letter-spacing=".7">SMART WASTE</text>
+  <text x="230" y="164" fill="#c5dfce" font-family="Segoe UI, Arial, sans-serif" font-size="41" font-weight="700" letter-spacing=".5">MANAGEMENT SYSTEM</text>
+</svg>

@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.pytest_cache/
+pytest-cache-files-*/
+reports/*.csv
+reports/*.pdf
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment and secrets
+.env.*
+
+# Python cache
+.coverage
+
+!.env.example
