@@ -2,12 +2,21 @@
 
 from pathlib import Path
 import json
+import os
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "models" / "best_efficientnetb0_finetuned.keras"
 CLASS_PATH = BASE_DIR / "models" / "class_names.json"
 IMAGE_SIZE = (224, 224)
 MAX_IMAGE_BYTES = 10 * 1024 * 1024
+CORS_ALLOWED_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:8501,http://127.0.0.1:8501",
+    ).split(",")
+    if origin.strip()
+]
 CAMPUS_LOCATIONS = ["Hostel", "Canteen", "Academic Block", "Library"]
 WASTE_MAPPING = {
     "battery": {"type": "E-waste", "bin": "E-waste Collection", "guidance": "Keep batteries separate and take them to the designated e-waste collection point."},

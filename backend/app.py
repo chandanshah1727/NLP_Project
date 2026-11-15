@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import String, cast, or_
 from sqlalchemy import text
 from backend.database import create_tables, SessionLocal, WasteRecord
-from backend.config import CAMPUS_LOCATIONS, WASTE_CATEGORIES, WASTE_MAPPING, MAX_IMAGE_BYTES, MODEL_PATH
+from backend.config import CAMPUS_LOCATIONS, WASTE_CATEGORIES, WASTE_MAPPING, MAX_IMAGE_BYTES, MODEL_PATH, CORS_ALLOWED_ORIGINS
 from backend.schemas import RecordCreate, RecordUpdate
 from backend.services.prediction_service import predict_image
 from backend.services.waste_service import is_correct
@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 create_tables()
 app = FastAPI(title="Smart Waste Segregation API", version="1.0.0", description="Campus waste classification and segregation monitoring API.")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:8501", "http://127.0.0.1:8501"], allow_credentials=False, allow_methods=["GET", "POST", "PUT", "DELETE"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=CORS_ALLOWED_ORIGINS, allow_credentials=False, allow_methods=["GET", "POST", "PUT", "DELETE"], allow_headers=["*"])
 
 def get_db():
     db = SessionLocal()

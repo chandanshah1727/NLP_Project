@@ -6,6 +6,7 @@ python-multipart
 pillow
 numpy
 sqlalchemy
+psycopg2-binary
 requests
 streamlit
 plotly

@@ -1,5 +1,6 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, CheckConstraint, Index, text
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime, timezone
 import os
@@ -7,11 +8,15 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'waste_management.db')}")
+if DATABASE_URL.startswith("postgres://"):
+    # Some managed PostgreSQL providers still supply this legacy URL scheme.
+    DATABASE_URL = "postgresql://" + DATABASE_URL[len("postgres://"):]
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+engine_options = {"pool_pre_ping": True}
+if make_url(DATABASE_URL).get_backend_name() == "sqlite":
+    engine_options["connect_args"] = {"check_same_thread": False}
+
+engine = create_engine(DATABASE_URL, **engine_options)
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -46,11 +51,18 @@ class WasteRecord(Base):
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
-    # Add optional fields to older SQLite databases without dropping or rewriting rows.
+    # Preserve older local databases and add optional fields to older deployments.
     with engine.begin() as connection:
-        existing = {row[1] for row in connection.execute(text("PRAGMA table_info(waste_records)"))}
-        for name, sql_type in (("image_filename", "VARCHAR"), ("notes", "VARCHAR"), ("weight_kg", "FLOAT")):
-            if name not in existing:
-                connection.execute(text(f"ALTER TABLE waste_records ADD COLUMN {name} {sql_type}"))
+        optional_columns = (("image_filename", "VARCHAR"), ("notes", "VARCHAR"), ("weight_kg", "FLOAT"))
+        if connection.dialect.name == "sqlite":
+            existing = {row[1] for row in connection.execute(text("PRAGMA table_info(waste_records)"))}
+            for name, sql_type in optional_columns:
+                if name not in existing:
+                    connection.execute(text(f"ALTER TABLE waste_records ADD COLUMN {name} {sql_type}"))
+        elif connection.dialect.name == "postgresql":
+            for name, sql_type in optional_columns:
+                connection.execute(text(
+                    f"ALTER TABLE waste_records ADD COLUMN IF NOT EXISTS {name} {sql_type}"
+                ))
     Index("ix_waste_records_created_at", WasteRecord.created_at).create(bind=engine, checkfirst=True)
     Index("ix_waste_records_location_category", WasteRecord.location, WasteRecord.waste_category).create(bind=engine, checkfirst=True)
