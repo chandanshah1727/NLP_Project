@@ -1,4 +1,11 @@
 """Search, inspect, edit, export, and delete recorded waste events."""
+from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import pandas as pd
 import streamlit as st
 from frontend.api_client import delete_record, get_record, get_records, update_record

@@ -1,4 +1,11 @@
 """Image classification and user-confirmed segregation recording workflow."""
+from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import streamlit as st
 from frontend.api_client import APIError, create_record, predict_image
 from frontend.components import LOCATIONS, WASTE_BINS, api_error, page_header
