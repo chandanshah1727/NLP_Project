@@ -1,8 +1,14 @@
 """Typed-by-convention REST helpers for the FastAPI backend."""
 import os
 import requests
+import streamlit as st
 
-API_BASE_URL = os.getenv("WASTE_API_URL", "http://127.0.0.1:8000").rstrip("/")
+try:
+    _secret_api_url = st.secrets.get("WASTE_API_URL")
+except Exception:
+    _secret_api_url = None
+
+API_BASE_URL = (_secret_api_url or os.getenv("WASTE_API_URL") or "http://127.0.0.1:8000").rstrip("/")
 TIMEOUT_SECONDS = 45
 
 class APIError(RuntimeError):
