@@ -8,10 +8,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'waste_management.db')}")
-if DATABASE_URL.startswith("postgres://"):
-    # Some managed PostgreSQL providers still supply this legacy URL scheme.
-    DATABASE_URL = "postgresql://" + DATABASE_URL[len("postgres://"):]
-
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgresql://",
+        "postgresql+psycopg2://",
+        1
+    )
 engine_options = {"pool_pre_ping": True}
 if make_url(DATABASE_URL).get_backend_name() == "sqlite":
     engine_options["connect_args"] = {"check_same_thread": False}
