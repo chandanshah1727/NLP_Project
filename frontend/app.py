@@ -1,5 +1,11 @@
 """Smart Waste Management System application shell and navigation."""
 from pathlib import Path
+import sys
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import streamlit as st
 from frontend import theme
 from frontend.api_client import APIError, health
